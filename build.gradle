@@ -15,7 +15,7 @@ dependencies {
 }
 
 println "HKHK"
-println configurations.compile.incoming.resolutionResult.root.getSelectionReason().getDescription()
+println configurations.compile.incoming.resolutionResult.getAllDependencies()
 
 project.task('printArtifactDependencies') {
     group 'RUP'
