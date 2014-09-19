@@ -8,15 +8,14 @@ apply plugin: 'java'
 dependencies {
   //for dependencies found in artifact repositories you can use
   //the string notation, e.g. group:name:version
-  compile 'commons-lang:commons-lang:2.6', 
-          'org.apache.commons:commons-compress:1.8.1',
-          'org.springframework.security:spring-security-core:3.1.0.RELEASE'
+  compile   'org.springframework.security:spring-security-core:3.1.0.RELEASE'
           
   
   compile group: 'com.google.code.guice', name: 'guice', version: '1.0'
 }
 
 println "HKHK"
+println configurations.compile.incoming.resolutionResult.root.getSelectionReason().getDescription()
 
 project.task('printArtifactDependencies') {
     group 'RUP'

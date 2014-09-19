@@ -2,13 +2,13 @@ clear
 set -x
 
 # shows trans deps
-gradlew dependencies --configuration compile
+#gradlew --daemon dependencies --configuration compile
 
 # shows reverse dependency tree
-gradlew -q dependencyInsight --dependency spring-aop --configuration compile
+#gradlew --daemon -q dependencyInsight --dependency spring-aop --configuration compile
 
 # shows only first level deps
-gradlew  -PconsumedGroup=org.springframe.+ printAD
+gradlew --daemon  -PconsumedGroup=org.+ printAD
 
 
 
