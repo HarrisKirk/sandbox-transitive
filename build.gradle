@@ -18,4 +18,60 @@ dependencies {
 
 println "HKHK"
 
+project.task('printArtifactDependencies') {
+    group 'RUP'
+    description 'Prints all artifacts in dependencies blocks'
+    doLast {
+        def COLUMN_PAD = 2
+        def SEP_CHAR = '-'
+        final String GROUP_KEY = 'consumedGroup'
+        final String OUTPUT_FILE_KEY = 'outputFile'
+        if (!project.hasProperty(GROUP_KEY)) {
+            throw new GradleException("Usage: gradlew -P${GROUP_KEY}=xxxx [-P${OUTPUT_FILE_KEY}=myfile] printArtifactDependencies")
+        }
+        
+        Closure inclusionCriteria = {
+            if (!it.group) return false   // gradle does not return group for some deps
+            boolean intraProjectDependency = it.group == project.group
+            boolean matchesUserPattern = it.group ==~ project.getProperty(GROUP_KEY)
+            matchesUserPattern && !intraProjectDependency
+        }
+        def dependencyList = []
+        project.allprojects.each { proj ->
+            proj.configurations.each { conf ->
+                conf.allDependencies.findAll(inclusionCriteria).each { dep ->
+                    dependencyList << [
+                        (DependencyColumn.PROJECT.name())     : proj.name,
+                        (DependencyColumn.CONFIG.name())      : conf.name,
+                        (DependencyColumn.GROUP.name())       : dep.group,
+                        (DependencyColumn.NAME.name())        : dep.name,
+                        (DependencyColumn.VERSION.name())     : dep.version
+                        ]
+                    }
+            }
+        }
+         dependencyList.each { println it }
+    }
+}
+
+enum DependencyColumn {
+    REPO_NAME ('Consuming Repo', true),
+    PROJECT ('Consuming Project', true),
+    BRANCHES ('Branch', true),
+    CONFIG ('Configuration', false),
+    GROUP ('Consumed Group', true),
+    NAME ('Consumed Artifact', true),
+    VERSION ('Version', true),
+    
+    String colName
+    def length
+    boolean dataDisplay
+    
+    DependencyColumn(def colName, boolean dataDisplay) {
+        this.colName = colName
+        this.length = colName.size()
+        this.dataDisplay = dataDisplay
+    }
+    
+}
 
