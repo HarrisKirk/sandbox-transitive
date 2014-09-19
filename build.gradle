@@ -1,0 +1,16 @@
+apply plugin: 'java'
+//so that we can use 'compile', 'testCompile' for dependencies
+
+dependencies {
+  //for dependencies found in artifact repositories you can use
+  //the string notation, e.g. group:name:version
+  compile 'commons-lang:commons-lang:2.6'
+  testCompile 'org.mockito:mockito:1.9.0-rc1'
+
+  //map notation:
+  compile group: 'com.google.code.guice', name: 'guice', version: '1.0'
+}
+
+println "HKHK"
+
+
