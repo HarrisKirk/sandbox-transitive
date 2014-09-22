@@ -21,7 +21,7 @@ println "HKHK: getAllDependencies()"
 configurations.compile.incoming.resolutionResult.getAllDependencies().eachWithIndex { obj, i ->
     ResolvedDependencyResult rdr = obj
     ResolvedModuleVersionResult rmvr = rdr.getSelected()
-    println "${i} : " + rmvr.getId().getName() + '-' + rmvr.getId().version + "   (${rmvr.getSelectionReason()})"
+    println i.toString().padRight(3) + (rmvr.getId().getName() + '-' + rmvr.getId().version).padRight(40) + "   (${rmvr.getSelectionReason()})"
 }
 
 //println "HKHK: getAllComponents()"
