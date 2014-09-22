@@ -1,4 +1,5 @@
 import org.gradle.api.artifacts.result.ResolvedDependencyResult
+import org.gradle.api.artifacts.result.ResolvedModuleVersionResult
 
 repositories {
     mavenCentral()
@@ -19,7 +20,8 @@ dependencies {
 println "HKHK: getAllDependencies()"
 configurations.compile.incoming.resolutionResult.getAllDependencies().eachWithIndex { obj, i ->
     ResolvedDependencyResult rdr = obj
-    println rdr.getSelected().getId().getName()
+    ResolvedModuleVersionResult rmvr = rdr.getSelected()
+    println "${i} : " + rmvr.getId().getName() + '-' + rmvr.getId().version + "   (${rmvr.getSelectionReason()})"
 }
 
 //println "HKHK: getAllComponents()"
