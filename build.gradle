@@ -19,6 +19,7 @@ dependencies {
 println "HKHK: getAllDependencies()"
 configurations.compile.incoming.resolutionResult.getAllDependencies().eachWithIndex { obj, i ->
     ResolvedDependencyResult rdr = obj
+    println rdr.getSelected().getId().getName()
 }
 
 //println "HKHK: getAllComponents()"
