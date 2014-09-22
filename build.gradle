@@ -20,11 +20,22 @@ dependencies {
 
 println "HKHK: getAllDependencies()"
 ResolutionResult rr = configurations.compile.incoming.resolutionResult
-rr.getAllDependencies().eachWithIndex { obj, i ->
-    ResolvedDependencyResult rdr = obj
-    ResolvedModuleVersionResult rmvr = rdr.getSelected()
-    println i.toString().padRight(3) + (rmvr.getId().getName() + '-' + rmvr.getId().version).padRight(40) + "   (${rmvr.getSelectionReason()})"
+
+println "ResolutionResult (w/first level dependencies) ======================"
+println rr.root.id.name
+rr.root.dependencies.eachWithIndex { obj, i ->
+    println "$i " + obj.selected.id.name
 }
+
+//rr.getAllModuleVersions().eachWithIndex { obj, i ->
+//   println "$i " + obj.getId().getName()
+//} 
+
+//rr.getAllDependencies().eachWithIndex { obj, i ->
+//    ResolvedDependencyResult rdr = obj
+//    ResolvedModuleVersionResult rmvr = rdr.getSelected()
+//    println i.toString().padRight(3) + (rmvr.getId().getName() + '-' + rmvr.getId().version).padRight(40) + "   (${rmvr.getSelectionReason()})"
+//}
 
 //println "HKHK: getAllComponents()"
 //configurations.compile.incoming.resolutionResult.getAllComponents().eachWithIndex { obj, i ->
