@@ -1,3 +1,5 @@
+import org.gradle.api.artifacts.result.ResolvedDependencyResult
+
 repositories {
     mavenCentral()
 }
@@ -14,8 +16,16 @@ dependencies {
   compile group: 'com.google.code.guice', name: 'guice', version: '1.0'
 }
 
-println "HKHK"
-println configurations.compile.incoming.resolutionResult.getAllDependencies()
+println "HKHK: getAllDependencies()"
+configurations.compile.incoming.resolutionResult.getAllDependencies().eachWithIndex { obj, i ->
+    ResolvedDependencyResult rdr = obj
+}
+
+//println "HKHK: getAllComponents()"
+//configurations.compile.incoming.resolutionResult.getAllComponents().eachWithIndex { obj, i ->
+//    println "$i : $obj"
+//}
+
 
 project.task('printArtifactDependencies') {
     group 'RUP'
