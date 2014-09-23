@@ -47,7 +47,8 @@ configurations.findAll {it.name == 'compile'}.each {
            DependencyResult dr = it 
            ResolvedModuleVersionResult from = dr.from  // the 'parent' node (opposite of dependency)
            ModuleVersionSelector requested = dr.requested
-           println '                 ' + requested.toString().padRight(40)
+           String requestedAndResolved = dr.toString()
+           println '                 ' + requestedAndResolved.padRight(40)
        }
     } 
 }
