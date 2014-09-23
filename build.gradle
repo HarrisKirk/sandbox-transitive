@@ -15,9 +15,8 @@ dependencies {
   //for dependencies found in artifact repositories you can use
   //the string notation, e.g. group:name:version
   compile   'org.springframework.security:spring-security-core:3.1.0.RELEASE'
-          
   
-  compile group: 'com.google.code.guice', name: 'guice', version: '1.0'
+  compile group: 'com.google.code.guice', name: 'guice', version: '1.+'
 }
 
 println "HKHK: getAllDependencies()"
@@ -38,7 +37,9 @@ configurations.each{
     boolean isUnique = rr.getAllModuleVersions().size() == rr.getAllModuleVersions().unique(true).size()
     println "rr.getAllModuleVersions().size() = ${rr.getAllModuleVersions().size()}   unique = $isUnique"
     rr.getAllModuleVersions().eachWithIndex { obj, i ->
-       println "$i " + obj.getId().toString()
+       ResolvedModuleVersionResult rmvr =  obj
+       ModuleVersionIdentifier mvi = obj.id 
+       println "$i ".padRight(5) + mvi.toString().padRight(50) 
     } 
 }
 
