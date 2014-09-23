@@ -29,9 +29,13 @@ rr.root.dependencies.eachWithIndex { obj, i ->
     println "$i " + obj.selected.id.name
 }
 
-//rr.getAllModuleVersions().eachWithIndex { obj, i ->
-//   println "$i " + obj.getId().getName()
-//} 
+println ''
+println "getAllModuleVersions ======================"
+boolean isUnique = rr.getAllModuleVersions().size() == rr.getAllModuleVersions().unique(true).size()
+println "rr.getAllModuleVersions().size() = ${rr.getAllModuleVersions().size()}   unique = $isUnique"
+rr.getAllModuleVersions().eachWithIndex { obj, i ->
+   println "$i " + obj.getId().toString()
+} 
 
 //rr.getAllDependencies().eachWithIndex { obj, i ->
 //    ResolvedDependencyResult rdr = obj
