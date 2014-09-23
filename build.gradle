@@ -1,4 +1,8 @@
 
+import java.awt.dnd.DragGestureEvent;
+import java.lang.ClassValue.Version;
+import java.util.jar.Attributes.Name;
+
 import org.gradle.api.artifacts.result.ResolvedDependencyResult
 import org.gradle.api.artifacts.result.ResolvedModuleVersionResult
 import org.gradle.api.artifacts.result.ResolutionResult
@@ -39,21 +43,23 @@ configurations.findAll {it.name == 'compile'}.each {
     ResolutionResult rr = it.incoming.resolutionResult
     boolean isUnique = rr.getAllModuleVersions().size() == rr.getAllModuleVersions().unique(true).size()
     println "rr.getAllModuleVersions().size() = ${rr.getAllModuleVersions().size()}   unique = $isUnique"
+    
+    // The list below is LARGER than the resolved list due
+    rr.getAllDependencies().eachWithIndex { obj, i ->
+        DependencyResult dr = obj
+        ModuleVersionSelector mvs = dr.requested
+        String name = mvs.name
+        String vers = mvs.version
+        println "$i ".padRight(5) + name.padRight(35) + vers.padRight(20)   
+    }
+     
+    println '^' * 30
     rr.getAllModuleVersions().eachWithIndex { obj, i ->
        ResolvedModuleVersionResult rmvr =  obj
-       ModuleVersionIdentifier mvi = obj.id 
-       Set dependencies = obj.dependencies
-       println "$i ".padRight(5) + mvi.toString().padRight(80) + '  d-cies ' + dependencies.size()  
-       dependencies.each{
-           DependencyResult dr = it 
-           ResolvedModuleVersionResult from = dr.from  // the 'parent' node (opposite of dependency)
-           ModuleVersionSelector requested = dr.requested
-           ResolvedModuleVersionResult selected = dr.selected
-           String requestedAndResolved = dr.toString()
-           println '       requested          ' + requested.toString().padRight(40) + '  >>>> ' + selected.getClass().name
-//           println '       selected           ' + selected.padRight(40)
-       }
-    } 
+       ModuleVersionIdentifier mvi = rmvr.id 
+       println "$i ".padRight(5) + mvi.name.padRight(35) + mvi.version.padRight(20)   
+    }
+    
 }
 
 
