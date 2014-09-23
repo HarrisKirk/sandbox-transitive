@@ -1,8 +1,8 @@
-import java.awt.dnd.DragGestureEvent;
 
 import org.gradle.api.artifacts.result.ResolvedDependencyResult
 import org.gradle.api.artifacts.result.ResolvedModuleVersionResult
 import org.gradle.api.artifacts.result.ResolutionResult
+import org.gradle.api.artifacts.ModuleVersionSelector
 
 repositories {
     mavenCentral()
@@ -45,7 +45,9 @@ configurations.findAll {it.name == 'compile'}.each {
        println "$i ".padRight(5) + mvi.toString().padRight(70) + '  d-cies ' + dependencies.size()  
        dependencies.each{
            DependencyResult dr = it 
-           println '                 ' + dr.toString()
+           ResolvedModuleVersionResult from = dr.from  // the 'parent' node (opposite of dependency)
+           ModuleVersionSelector requested = dr.requested
+           println '                 ' + requested.toString().padRight(40)
        }
     } 
 }
