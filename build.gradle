@@ -1,3 +1,5 @@
+import java.awt.dnd.DragGestureEvent;
+
 import org.gradle.api.artifacts.result.ResolvedDependencyResult
 import org.gradle.api.artifacts.result.ResolvedModuleVersionResult
 import org.gradle.api.artifacts.result.ResolutionResult
@@ -39,7 +41,12 @@ configurations.findAll {it.name == 'compile'}.each {
     rr.getAllModuleVersions().eachWithIndex { obj, i ->
        ResolvedModuleVersionResult rmvr =  obj
        ModuleVersionIdentifier mvi = obj.id 
-       println "$i ".padRight(5) + mvi.toString().padRight(50) 
+       Set dependencies = obj.dependencies
+       println "$i ".padRight(5) + mvi.toString().padRight(70) + '  d-cies ' + dependencies.size()  
+       dependencies.each{
+           DependencyResult dr = it 
+           println '                 ' + dr.toString()
+       }
     } 
 }
 
