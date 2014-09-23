@@ -21,21 +21,29 @@ dependencies {
 }
 
 println "HKHK: getAllDependencies()"
-ResolutionResult rr = configurations.compile.incoming.resolutionResult
+ResolutionResult rr1 = configurations.compile.incoming.resolutionResult
 
 println "ResolutionResult (w/first level dependencies) ======================"
-println rr.root.id.name
-rr.root.dependencies.eachWithIndex { obj, i ->
+println rr1.root.id.name
+rr1.root.dependencies.eachWithIndex { obj, i ->
     println "$i " + obj.selected.id.name
 }
 
 println ''
 println "getAllModuleVersions ======================"
-boolean isUnique = rr.getAllModuleVersions().size() == rr.getAllModuleVersions().unique(true).size()
-println "rr.getAllModuleVersions().size() = ${rr.getAllModuleVersions().size()}   unique = $isUnique"
-rr.getAllModuleVersions().eachWithIndex { obj, i ->
-   println "$i " + obj.getId().toString()
-} 
+configurations.each{
+    println ''
+    println "CONFIG '${it}'" 
+    ResolutionResult rr = it.incoming.resolutionResult
+    boolean isUnique = rr.getAllModuleVersions().size() == rr.getAllModuleVersions().unique(true).size()
+    println "rr.getAllModuleVersions().size() = ${rr.getAllModuleVersions().size()}   unique = $isUnique"
+    rr.getAllModuleVersions().eachWithIndex { obj, i ->
+       println "$i " + obj.getId().toString()
+    } 
+}
+
+
+
 
 //rr.getAllDependencies().eachWithIndex { obj, i ->
 //    ResolvedDependencyResult rdr = obj
