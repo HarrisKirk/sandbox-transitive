@@ -3,6 +3,7 @@ import org.gradle.api.artifacts.result.ResolvedDependencyResult
 import org.gradle.api.artifacts.result.ResolvedModuleVersionResult
 import org.gradle.api.artifacts.result.ResolutionResult
 import org.gradle.api.artifacts.ModuleVersionSelector
+import org.gradle.execution.SelectedTaskExecutionAction;
 
 repositories {
     mavenCentral()
@@ -42,13 +43,15 @@ configurations.findAll {it.name == 'compile'}.each {
        ResolvedModuleVersionResult rmvr =  obj
        ModuleVersionIdentifier mvi = obj.id 
        Set dependencies = obj.dependencies
-       println "$i ".padRight(5) + mvi.toString().padRight(70) + '  d-cies ' + dependencies.size()  
+       println "$i ".padRight(5) + mvi.toString().padRight(80) + '  d-cies ' + dependencies.size()  
        dependencies.each{
            DependencyResult dr = it 
            ResolvedModuleVersionResult from = dr.from  // the 'parent' node (opposite of dependency)
            ModuleVersionSelector requested = dr.requested
+           ResolvedModuleVersionResult selected = dr.selected
            String requestedAndResolved = dr.toString()
-           println '                 ' + requestedAndResolved.padRight(40)
+           println '       requested          ' + requested.toString().padRight(40) + '  >>>> ' + selected.getClass().name
+//           println '       selected           ' + selected.padRight(40)
        }
     } 
 }
