@@ -30,9 +30,9 @@ rr1.root.dependencies.eachWithIndex { obj, i ->
 
 println ''
 println "getAllModuleVersions ======================"
-configurations.each{
+configurations.findAll {it.name == 'compile'}.each {
     println ''
-    println "CONFIG '${it}'" 
+    println "CONFIG '${it.name}'"  
     ResolutionResult rr = it.incoming.resolutionResult
     boolean isUnique = rr.getAllModuleVersions().size() == rr.getAllModuleVersions().unique(true).size()
     println "rr.getAllModuleVersions().size() = ${rr.getAllModuleVersions().size()}   unique = $isUnique"
