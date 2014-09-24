@@ -38,7 +38,7 @@ configurations.findAll {it.name == 'compile'}.each {
     rr.getAllDependencies().eachWithIndex { obj, i ->
         DependencyResult dr = obj
         ModuleVersionSelector mvs = dr.requested
-        println "$i ".padRight(5) + mvs.name.padRight(35) + mvs.version.padRight(20)   
+        println "$i ".padRight(5) + mvs.group.padRight(35) + mvs.name.padRight(35) + mvs.version.padRight(20)   
     }
      
     println ''
@@ -46,7 +46,7 @@ configurations.findAll {it.name == 'compile'}.each {
     rr.getAllModuleVersions().eachWithIndex { obj, i ->
        ResolvedModuleVersionResult rmvr =  obj
        ModuleVersionIdentifier mvi = rmvr.id 
-       println "$i ".padRight(5) + mvi.name.padRight(35) + mvi.version.padRight(20)   
+       println "$i ".padRight(5) + mvi.group.padRight(35) + mvi.name.padRight(35) + mvi.version.padRight(20)   
     }
 }
 
