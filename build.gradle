@@ -93,7 +93,7 @@ project.task('printArtifactDependencies') {
                     DependencyResult dr = obj
                     ModuleVersionSelector mvs = dr.requested
                     ResolvedModuleVersionResult rmvr = dr.from
-                    println "$i ".padRight(5) + mvs.group.padRight(35) + mvs.name.padRight(35) + mvs.version.padRight(20) + '  ' + rmvr
+                    println "$i ".padRight(5) + mvs.group.padRight(35) + mvs.name.padRight(35) + mvs.version.padRight(20) + '  ' + dr
                 }
                 println ''
                 
