@@ -1,29 +1,24 @@
 
-import java.awt.dnd.DragGestureEvent;
-import java.lang.ClassValue.Version;
-import java.util.jar.Attributes.Name;
-
 import org.gradle.api.artifacts.result.ResolvedDependencyResult
 import org.gradle.api.artifacts.result.ResolvedModuleVersionResult
 import org.gradle.api.artifacts.result.ResolutionResult
 import org.gradle.api.artifacts.ModuleVersionSelector
-import org.gradle.execution.SelectedTaskExecutionAction;
 
 repositories {
-    mavenCentral()
+    maven { url rupRepoExtUrl }
+    ivy { url rupRepoReleaseUrl }
+    if ( project.hasProperty('developPlugins') ) {
+        ivy { url file(System.getProperty('user.home') + '/.ivylocal') }
+    }
 }
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
-apply plugin: 'project-report'
 
 //so that we can use 'compile', 'testCompile' for dependencies
 
 dependencies {
-  //for dependencies found in artifact repositories you can use
-  //the string notation, e.g. group:name:version
-  compile   'org.springframework.security:spring-security-core:3.1.0.RELEASE'
-  
+  compile "com.copyright.rup.common:rup-common-util:2.4.+"
   compile group: 'com.google.code.guice', name: 'guice', version: '1.+'
 }
 

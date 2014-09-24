@@ -8,7 +8,7 @@ set -x
 #gradlew --daemon -q dependencyInsight --dependency spring-aop --configuration compile
 
 # shows only first level deps
-gradlew --daemon  -PconsumedGroup=org.+ printAD
+#gradlew --daemon  -PconsumedGroup=org.+ printAD
 
-
+gradlew dependencies --configuration compile
 
