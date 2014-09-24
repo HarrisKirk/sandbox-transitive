@@ -15,6 +15,7 @@ repositories {
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'project-report'
 
 //so that we can use 'compile', 'testCompile' for dependencies
 
@@ -26,55 +27,28 @@ dependencies {
   compile group: 'com.google.code.guice', name: 'guice', version: '1.+'
 }
 
-println "HKHK: getAllDependencies()"
-ResolutionResult rr1 = configurations.compile.incoming.resolutionResult
-
-println "ResolutionResult (w/first level dependencies) ======================"
-println rr1.root.id.name
-rr1.root.dependencies.eachWithIndex { obj, i ->
-    println "$i " + obj.selected.id.name
-}
-
 println ''
-println "getAllModuleVersions ======================"
 configurations.findAll {it.name == 'compile'}.each {
+    println "Configuration: '${it.name}'"  
     println ''
-    println "CONFIG '${it.name}'"  
+    println 'Declared Dependencies:'
     ResolutionResult rr = it.incoming.resolutionResult
-    boolean isUnique = rr.getAllModuleVersions().size() == rr.getAllModuleVersions().unique(true).size()
-    println "rr.getAllModuleVersions().size() = ${rr.getAllModuleVersions().size()}   unique = $isUnique"
     
-    // The list below is LARGER than the resolved list due
+    // The list below is LARGER than the resolved list due to the resolution process.
     rr.getAllDependencies().eachWithIndex { obj, i ->
         DependencyResult dr = obj
         ModuleVersionSelector mvs = dr.requested
-        String name = mvs.name
-        String vers = mvs.version
-        println "$i ".padRight(5) + name.padRight(35) + vers.padRight(20)   
+        println "$i ".padRight(5) + mvs.name.padRight(35) + mvs.version.padRight(20)   
     }
      
-    println '^' * 30
+    println ''
+    println 'Resolved:'
     rr.getAllModuleVersions().eachWithIndex { obj, i ->
        ResolvedModuleVersionResult rmvr =  obj
        ModuleVersionIdentifier mvi = rmvr.id 
        println "$i ".padRight(5) + mvi.name.padRight(35) + mvi.version.padRight(20)   
     }
-    
 }
-
-
-
-
-//rr.getAllDependencies().eachWithIndex { obj, i ->
-//    ResolvedDependencyResult rdr = obj
-//    ResolvedModuleVersionResult rmvr = rdr.getSelected()
-//    println i.toString().padRight(3) + (rmvr.getId().getName() + '-' + rmvr.getId().version).padRight(40) + "   (${rmvr.getSelectionReason()})"
-//}
-
-//println "HKHK: getAllComponents()"
-//configurations.compile.incoming.resolutionResult.getAllComponents().eachWithIndex { obj, i ->
-//    println "$i : $obj"
-//}
 
 
 project.task('printArtifactDependencies') {
