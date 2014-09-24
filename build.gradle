@@ -86,6 +86,17 @@ project.task('printArtifactDependencies') {
                         (DependencyColumn.VERSION.name())     : mvi.version 
                         ]
                 }
+
+                println ''                
+                println 'DEPS::::'                
+                rr.getAllDependencies().eachWithIndex { obj, i ->
+                    DependencyResult dr = obj
+                    ModuleVersionSelector mvs = dr.requested
+                    ResolvedModuleVersionResult rmvr = dr.from
+                    println "$i ".padRight(5) + mvs.group.padRight(35) + mvs.name.padRight(35) + mvs.version.padRight(20) + '  ' + rmvr
+                }
+                println ''
+                
             }
         }
          dependencyList.each { 
