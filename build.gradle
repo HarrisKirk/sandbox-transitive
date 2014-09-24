@@ -1,4 +1,7 @@
 
+import javax.security.auth.login.Configuration.ConfigDelegate;
+
+import org.gradle.api.Project;
 import org.gradle.api.artifacts.result.ResolvedDependencyResult
 import org.gradle.api.artifacts.result.ResolvedModuleVersionResult
 import org.gradle.api.artifacts.result.ResolutionResult
@@ -20,14 +23,16 @@ apply plugin: 'eclipse'
 dependencies {
   compile "com.copyright.rup.common:rup-common-util:2.4.+"
   compile group: 'com.google.code.guice', name: 'guice', version: '1.+'
+
+    
 }
 
 println ''
-configurations.findAll {it.name == 'compile'}.each {
-    println "Configuration: '${it.name}'"  
+configurations.findAll {it.name == 'compile'}.each { conf ->
+    println "Configuration: '${conf.name}'"  
     println ''
     println 'Declared Dependencies:'
-    ResolutionResult rr = it.incoming.resolutionResult
+    ResolutionResult rr = conf.incoming.resolutionResult
     
     // The list below is LARGER than the resolved list due to the resolution process.
     rr.getAllDependencies().eachWithIndex { obj, i ->
@@ -64,21 +69,32 @@ project.task('printArtifactDependencies') {
             boolean matchesUserPattern = it.group ==~ project.getProperty(GROUP_KEY)
             matchesUserPattern && !intraProjectDependency
         }
+        
+        
         def dependencyList = []
         project.allprojects.each { proj ->
-            proj.configurations.each { conf ->
-                conf.allDependencies.findAll(inclusionCriteria).each { dep ->
+            proj.configurations.findAll {it.name == 'compile'}.each { conf ->
+                ResolutionResult rr = conf.incoming.resolutionResult
+                rr.getAllModuleVersions().each { 
+                    ResolvedModuleVersionResult rmvr =  it
+                    ModuleVersionIdentifier mvi = rmvr.id
                     dependencyList << [
                         (DependencyColumn.PROJECT.name())     : proj.name,
                         (DependencyColumn.CONFIG.name())      : conf.name,
-                        (DependencyColumn.GROUP.name())       : dep.group,
-                        (DependencyColumn.NAME.name())        : dep.name,
-                        (DependencyColumn.VERSION.name())     : dep.version
+                        (DependencyColumn.GROUP.name())       : mvi.group,
+                        (DependencyColumn.NAME.name())        : mvi.name,
+                        (DependencyColumn.VERSION.name())     : mvi.version 
                         ]
-                    }
+                }
             }
         }
-         dependencyList.each { println it }
+         dependencyList.each { 
+             println '' +
+                 it[DependencyColumn.GROUP.name()].padRight(30) +
+                 it[DependencyColumn.NAME.name()].padRight(30) +
+                 it[DependencyColumn.VERSION.name()].padRight(30) 
+             
+         }
     }
 }
 

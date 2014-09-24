@@ -10,5 +10,5 @@ set -x
 # shows only first level deps
 #gradlew --daemon  -PconsumedGroup=org.+ printAD
 
-gradlew dependencies --configuration compile
+gradlew dependencies --configuration compile -PconsumedGroup=.+ pAD
 
