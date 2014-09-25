@@ -24,7 +24,8 @@ configurations.findAll {it.name == 'compile'}.each { conf ->
     println ''
     println 'Declared Dependencies:'
     ResolutionResult rr = conf.incoming.resolutionResult
-    rr.getAllDependencies().eachWithIndex { obj, i ->
+    def requestedList = rr.getAllDependencies()
+    requestedList.eachWithIndex { obj, i ->
         DependencyResult dr = obj
         ModuleVersionSelector mvs = dr.requested
         println "$i ".padRight(5) + mvs.group.padRight(35) + mvs.name.padRight(35) + mvs.version.padRight(20)   
@@ -32,11 +33,32 @@ configurations.findAll {it.name == 'compile'}.each { conf ->
      
     println ''
     println 'Resolved:'
-    rr.getAllModuleVersions().eachWithIndex { obj, i ->
+    def resolvedList = rr.getAllModuleVersions()
+    resolvedList.eachWithIndex { obj, i ->
        ResolvedModuleVersionResult rmvr =  obj
-       ModuleVersionIdentifier mvi = rmvr.id 
-       println "$i ".padRight(5) + mvi.group.padRight(35) + mvi.name.padRight(35) + mvi.version.padRight(20)   
+       ModuleVersionIdentifier mvi = rmvr.id
+       def requested = getRequestedVersion (mvi, requestedList) ? '(' + getRequestedVersion (mvi, requestedList) + ')' : ''
+       println "$i ".padRight(5) + mvi.group.padRight(35) + mvi.name.padRight(35) + mvi.version.padRight(20) + requested 
     }
+}
+
+String getRequestedVersion(mvi, requestedList) {
+        ModuleVersionSelector mvs
+        String requestedVersion
+        requestedList.each {
+            mvs = it.requested
+            boolean artifactMatches = (mvs.group == mvi.group && mvs.name == mvi.name)
+            if ( artifactMatches ) {
+                if ( mvs.matchesStrictly(mvi) ) {
+                    requestedVersion = ''
+                    return 
+                } else {
+                    requestedVersion = mvs.version 
+                    return 
+                }
+            }
+        }
+        return requestedVersion
 }
 
 
