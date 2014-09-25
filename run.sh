@@ -1,7 +1,7 @@
 clear
 set -x
 
-gradlew --daemon
+#gradlew --daemon
 
 # shows trans deps
 #gradlew --daemon dependencies --configuration compile
@@ -12,5 +12,5 @@ gradlew --daemon
 # shows only first level deps
 #gradlew --daemon  -PconsumedGroup=org.+ printAD
 
-#gradlew dependencies --configuration compile -PconsumedGroup=.+ pAD
+gradlew dependencies --configuration compile -PconsumedGroup=.+ pAD
 

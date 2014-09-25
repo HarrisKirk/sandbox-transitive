@@ -22,14 +22,8 @@ println ''
 configurations.findAll {it.name == 'compile'}.each { conf ->
     println "Configuration: '${conf.name}'"  
     println ''
-    println 'Declared Dependencies:'
     ResolutionResult rr = conf.incoming.resolutionResult
     def requestedList = rr.getAllDependencies()
-    requestedList.eachWithIndex { obj, i ->
-        DependencyResult dr = obj
-        ModuleVersionSelector mvs = dr.requested
-        println "$i ".padRight(5) + mvs.group.padRight(35) + mvs.name.padRight(35) + mvs.version.padRight(20)   
-    }
      
     println ''
     println 'Resolved:'
@@ -58,7 +52,7 @@ String getRequestedVersion(mvi, requestedList) {
                 }
             }
         }
-        return requestedVersion
+        return requestedVersion ?: ''
 }
 
 
@@ -86,27 +80,21 @@ project.task('printArtifactDependencies') {
         project.allprojects.each { proj ->
             proj.configurations.findAll {it.name == 'compile'}.each { conf ->
                 ResolutionResult rr = conf.incoming.resolutionResult
-                rr.getAllModuleVersions().each { 
+                def requestedList = rr.getAllDependencies()
+                def resolvedList = rr.getAllModuleVersions()
+                resolvedList.each { 
                     ResolvedModuleVersionResult rmvr =  it
                     ModuleVersionIdentifier mvi = rmvr.id
                     dependencyList << [
-                        (DependencyColumn.PROJECT.name())     : proj.name,
-                        (DependencyColumn.CONFIG.name())      : conf.name,
-                        (DependencyColumn.GROUP.name())       : mvi.group,
-                        (DependencyColumn.NAME.name())        : mvi.name,
-                        (DependencyColumn.VERSION.name())     : mvi.version 
+                        (DependencyColumn.PROJECT.name())           : proj.name,
+                        (DependencyColumn.CONFIG.name())            : conf.name,
+                        (DependencyColumn.GROUP.name())             : mvi.group,
+                        (DependencyColumn.NAME.name())              : mvi.name,
+                        (DependencyColumn.VERSION.name())           : mvi.version, 
+                        (DependencyColumn.VERSION_REQUESTED.name()) : getRequestedVersion (mvi, requestedList), 
                         ]
                 }
 
-                println ''                
-                println 'DEPS::::'                
-                rr.getAllDependencies().eachWithIndex { obj, i ->
-                    DependencyResult dr = obj
-                    ModuleVersionSelector mvs = dr.requested
-                    ResolvedModuleVersionResult rmvr = dr.from
-                    println "$i ".padRight(5) + mvs.group.padRight(35) + mvs.name.padRight(35) + mvs.version.padRight(20) + '  ' + dr
-                }
-                println ''
                 
             }
         }
@@ -114,8 +102,9 @@ project.task('printArtifactDependencies') {
              println '' +
                  it[DependencyColumn.GROUP.name()].padRight(30) +
                  it[DependencyColumn.NAME.name()].padRight(30) +
-                 it[DependencyColumn.VERSION.name()].padRight(30) 
-             
+                 it[DependencyColumn.VERSION.name()].padRight(10) +  
+                 it[DependencyColumn.VERSION_REQUESTED.name()].padRight(10)
+                 
          }
     }
 }
@@ -128,6 +117,7 @@ enum DependencyColumn {
     GROUP ('Consumed Group', true),
     NAME ('Consumed Artifact', true),
     VERSION ('Version', true),
+    VERSION_REQUESTED ('Version Requested', true),
     
     String colName
     def length
