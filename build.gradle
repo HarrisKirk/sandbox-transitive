@@ -37,22 +37,14 @@ configurations.findAll {it.name == 'compile'}.each { conf ->
 }
 
 String getRequestedVersion(mvi, requestedList) {
-        ModuleVersionSelector mvs
-        String requestedVersion
-        requestedList.each {
-            mvs = it.requested
-            boolean artifactMatches = (mvs.group == mvi.group && mvs.name == mvi.name)
-            if ( artifactMatches ) {
-                if ( mvs.matchesStrictly(mvi) ) {
-                    requestedVersion = ''
-                    return 
-                } else {
-                    requestedVersion = mvs.version 
-                    return 
-                }
-            }
-        }
-        return requestedVersion ?: ''
+        // returns first value but could easily be more than 1 (some "1+" others 1.2, 1.2.1 ), in which case the
+        // matchesStrictly might simply return a different version (rather than the expected dynamic version)
+        // It's a discussion point.
+        // TODO: How to handle more than 1 
+        DependencyResult dr = requestedList.find { it.requested.group == mvi.group && it.requested.name == mvi.name }
+        if ( dr == null ) return ''
+        ModuleVersionSelector mvs = dr.requested
+        return mvs.matchesStrictly(mvi) ? '' : mvs.version
 }
 
 
